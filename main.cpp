@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cstring>
 #include <map>
+#include <vector>
 
 using namespace std;
 
@@ -10,6 +11,8 @@ string reverseString(string toRev);
 string incrementLetter(string toManip);
 string capitalizeEachWord(string toCap);
 bool hasUniqueLetter(string toCheck);
+vector<string> split(string s, char seperator);
+vector<string> split(string s, string seperator);
 
 int main()
 {
@@ -30,7 +33,23 @@ int main()
 
     // See if string contains any unique letters
     bool hasUnique = hasUniqueLetter(theWord);
-    cout << format("Does string contain unique letter (1 is true, 0 is false): {}", to_string(hasUnique));
+    cout << format("Does string contain unique letter (1 is true, 0 is false): {}", to_string(hasUnique)) << endl; 
+
+    // Custom split function. At the moment it will only take a single char as a seperator
+    vector<string> wordList = split(theWord, ' ');
+    cout << "Word List: " << endl;
+    for (auto word : wordList)
+    {
+        cout << word << endl;
+    }
+
+    // Custom split function. THis one takes a string of anywhere from 1 char and on.
+    vector<string> custWordList = split(theWord, "is");
+    cout << "Custom word list: " << endl;
+    for (auto word : custWordList)
+    {
+        cout << word << endl;
+    }
 
     return 0;
 }
@@ -115,4 +134,74 @@ bool hasUniqueLetter(string toCheck)
     }
 
     return hasUniqueLetter;
+}
+
+vector<string> split(string s, char seperator)
+{
+    vector<string> splitList {};
+
+    string word {};
+    for (auto letter : s)
+    {
+        if (letter != seperator)
+        {
+            word += letter;
+        }
+        else
+        {
+            splitList.push_back(word);
+            word = "";
+        }
+    }
+
+    splitList.push_back(word);
+
+    return splitList;
+}
+
+vector<string> split(string s, string seperator)
+{
+    vector<string> splitList {};
+
+    string word {};
+    string sep {};
+    int index {};
+    for (auto i = 0; i < s.length(); i++)
+    {
+        if (s[i] == seperator[0])
+        {   
+            sep += s[i];
+            for (auto letter : seperator)
+            {
+                if (sep == seperator)
+                {
+                    i = index;
+                    splitList.push_back(word);
+                    sep = "";
+                }
+                else if (letter == s[index])
+                {
+                    sep += letter;
+                    index++;
+                }
+                else if (letter != s[index])
+                {
+                    sep += letter;
+                    index++;
+                    word += sep;
+                    sep = "";
+                    i = index;
+                }
+                index++;
+            }
+        }
+        else
+        {
+            word += s[i];
+        }
+    }
+
+    splitList.push_back(word);
+
+    return splitList;
 }
